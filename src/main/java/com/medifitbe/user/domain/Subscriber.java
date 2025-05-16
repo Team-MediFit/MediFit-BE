@@ -1,0 +1,64 @@
+package com.medifitbe.user.domain;
+
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+
+import java.util.List;
+
+@Getter
+@EqualsAndHashCode(of = "id")
+public class Subscriber {
+
+    private final Long id;
+    private final String email;
+    private final Boolean gender;
+    private final RegionMajor regionMajor;
+    private final List<String> regionMinors;
+    private final List<Department> departments;
+    private final List<WorkType> workTypes;
+    private final List<Workday> workdays;
+    private final WeekendWork weekendWork;
+    private final List<Welfare> welfarePreferences;
+    private final WageUnit wageUnit;
+    private final Integer salaryMin;
+    private final Integer salaryMax;
+    private final CareerType careerType;
+    private final Integer experienceMonths;
+
+    @Builder
+    public Subscriber(
+            Long id,
+            String email,
+            Boolean gender,
+            RegionMajor regionMajor,
+            List<String> regionMinors,
+            List<Department> departments,
+            List<WorkType> workTypes,
+            List<Workday> workdays,
+            WeekendWork weekendWork,
+            List<Welfare> welfarePreferences,
+            WageUnit wageUnit,
+            Integer salaryMin,
+            Integer salaryMax,
+            CareerType careerType,
+            Integer experienceMonths
+    ) {
+        this.id = id;
+        this.email = email;
+        this.gender = gender;
+        this.regionMajor = regionMajor;
+        this.regionMinors = regionMinors;
+        this.departments = departments;
+        this.workTypes = workTypes;
+        this.workdays = workdays;
+        this.weekendWork = weekendWork;
+        this.welfarePreferences = welfarePreferences;
+        this.wageUnit = wageUnit;
+        this.salaryMin = salaryMin;
+        this.salaryMax = salaryMax;
+        this.careerType = careerType;
+        this.experienceMonths = experienceMonths;
+    }
+
+}
