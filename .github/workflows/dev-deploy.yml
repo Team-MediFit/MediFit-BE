@@ -41,8 +41,8 @@ jobs:
 
       - name: Build and Push Docker Image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/thinkboo-backend-app:latest .
-          docker push ${{ secrets.DOCKER_USERNAME }}/thinkboo-backend-app:latest
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/medifit-backend-app:latest .
+          docker push ${{ secrets.DOCKER_USERNAME }}/medifit-backend-app:latest
 
       - name: Upload Deploy Script to EC2
         uses: appleboy/scp-action@master
