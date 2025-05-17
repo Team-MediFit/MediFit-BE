@@ -1,0 +1,21 @@
+
+services:
+  backend:
+    container_name: deploy-backend
+    image: "${DOCKER_USERNAME}/medifit-backend-app:latest"
+    restart: always
+    env_file:
+      - .env  # 환경 변수 관리 (DB 정보, JWT 등)
+    volumes:
+      - logs:/app/logs  # 로그 데이터 유지
+    networks:
+      - medifit_network
+    ports:
+      - "8080:8080"
+
+volumes:
+  logs:  # 로그 볼륨 추가
+
+networks:
+  medifit_network:
+    driver: bridge
