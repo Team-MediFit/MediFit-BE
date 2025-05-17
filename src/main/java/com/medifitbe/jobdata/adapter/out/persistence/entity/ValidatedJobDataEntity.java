@@ -29,11 +29,8 @@ public class ValidatedJobDataEntity extends TimeBaseEntity {
     private String experience;
     private String deadline;
     private String workingDays;
+    @Column(length = 1000)
     private String welfare;
-
-    @Column(length = 1000)
     private String responsibilities;
-
-    @Column(length = 1000)
     private String link;
 }
