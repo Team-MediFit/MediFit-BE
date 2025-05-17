@@ -3,7 +3,7 @@ name: Deploy to AWS
 on:
   push:
     branches:
-      - MF-6
+      - develop
 
 jobs:
   deploy:
