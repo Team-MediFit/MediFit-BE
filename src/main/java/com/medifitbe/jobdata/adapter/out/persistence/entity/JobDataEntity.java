@@ -27,10 +27,9 @@ public class JobDataEntity extends TimeBaseEntity {
     private String salary;           // 급여
     private String experience;       // 경력
     private String deadline;         // 마감일
-    private String workingDays;      // 근무요일
+    @Column(length = 1000)
+    private String workingDays;     // 근무요일
     private String welfare;          // 복지
     private String responsibilities; // 담당업무
-
-    @Column(length = 1000)
     private String link;             // 공고 상세 링크
 }
