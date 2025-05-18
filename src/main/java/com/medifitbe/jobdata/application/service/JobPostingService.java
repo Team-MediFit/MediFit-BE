@@ -13,6 +13,10 @@ public class JobPostingService {
     private final JobDataRepository jobDataRepository;
 
     public void save(JobDataRequest request) {
+        if (jobDataRepository.existsByLink(request.link())) {
+            return; // Skip saving if link already exists
+        }
+
         JobDataEntity jobDataEntity = JobDataEntity.builder()
                 .siteName(request.siteName())
                 .hospitalName(request.hospitalName())
