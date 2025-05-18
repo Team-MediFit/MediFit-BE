@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface JobDataRepository extends JpaRepository<JobDataEntity, Long> {
+    boolean existsByLink(String link);
 }
