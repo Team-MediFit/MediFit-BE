@@ -9,12 +9,10 @@ import java.util.List;
 @Getter
 @EqualsAndHashCode(of = "id")
 public class Subscriber {
-
     private final Long id;
     private final String email;
     private final Boolean gender;
-    private final RegionMajor regionMajor;
-    private final List<String> regionMinors;
+    private final List<RegionGroup> regionGroups;
     private final List<Department> departments;
     private final List<WorkType> workTypes;
     private final List<Workday> workdays;
@@ -31,8 +29,7 @@ public class Subscriber {
             Long id,
             String email,
             Boolean gender,
-            RegionMajor regionMajor,
-            List<String> regionMinors,
+            List<RegionGroup> regionGroups,
             List<Department> departments,
             List<WorkType> workTypes,
             List<Workday> workdays,
@@ -47,8 +44,7 @@ public class Subscriber {
         this.id = id;
         this.email = email;
         this.gender = gender;
-        this.regionMajor = regionMajor;
-        this.regionMinors = regionMinors;
+        this.regionGroups = regionGroups;
         this.departments = departments;
         this.workTypes = workTypes;
         this.workdays = workdays;
@@ -60,5 +56,4 @@ public class Subscriber {
         this.careerType = careerType;
         this.experienceMonths = experienceMonths;
     }
-
 }

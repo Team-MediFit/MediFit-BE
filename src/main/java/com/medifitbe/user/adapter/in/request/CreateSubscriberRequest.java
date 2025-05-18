@@ -18,13 +18,10 @@ public record CreateSubscriberRequest(
         @NotNull
         Boolean gender,
 
-        @Schema(description = "주요 지역", example = "서울")
+        @Schema(description = "주요 지역 그룹", example = "[{\"major\": \"서울\", \"minors\": [\"강남구\", \"서초구\"]}, {\"major\": \"경기\", \"minors\": [\"수원시\", \"성남시\"]}]")
         @NotNull
-        RegionMajor regionMajor,
+        List<RegionGroup> regionGroups,
 
-        @Schema(description = "세부 지역", example = "[\"강남구\", \"서초구\"]")
-        @NotNull
-        List<@NotBlank String> regionMinors,
 
         @Schema(description = "희망 진료과", example = "[\"내과\", \"정신건강의학과\"]")
         @NotNull
