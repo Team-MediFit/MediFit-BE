@@ -1,21 +1,31 @@
 package com.medifitbe.user.mapper;
 
 import com.medifitbe.user.adapter.in.request.CreateSubscriberRequest;
-import org.springframework.stereotype.Component;
+import com.medifitbe.user.adapter.out.persistence.entity.RegionGroupEntity;
 import com.medifitbe.user.adapter.out.persistence.entity.SubscriberEntity;
+import com.medifitbe.user.domain.RegionGroup;
 import com.medifitbe.user.domain.Subscriber;
+import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class SubscriberMapper {
 
     public static SubscriberEntity toEntity(Subscriber subscriber) {
+        List<RegionGroupEntity> regionGroupEntities = subscriber.getRegionGroups().stream()
+                .map(group -> RegionGroupEntity.builder()
+                        .major(group.getMajor())
+                        .minors(group.getMinors())
+                        .build())
+                .collect(Collectors.toList());
+
         return SubscriberEntity.builder()
                 .id(subscriber.getId())
                 .email(subscriber.getEmail())
                 .gender(subscriber.getGender())
-                .regionMajor(subscriber.getRegionMajor())
-                .regionMinors(subscriber.getRegionMinors())
+                .regionGroups(regionGroupEntities)
                 .departments(subscriber.getDepartments())
                 .workTypes(subscriber.getWorkTypes())
                 .workdays(subscriber.getWorkdays())
@@ -30,11 +40,12 @@ public class SubscriberMapper {
     }
 
     public static Subscriber toDomain(CreateSubscriberRequest request) {
+        List<RegionGroup> regionGroups = request.regionGroups();
+
         return Subscriber.builder()
                 .email(request.email())
                 .gender(request.gender())
-                .regionMajor(request.regionMajor())
-                .regionMinors(request.regionMinors())
+                .regionGroups(regionGroups)
                 .departments(request.departments())
                 .workTypes(request.workTypes())
                 .workdays(request.workdays())

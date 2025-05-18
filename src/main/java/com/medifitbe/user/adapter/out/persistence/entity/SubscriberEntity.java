@@ -28,12 +28,9 @@ public class SubscriberEntity extends TimeBaseEntity {
 
     private Boolean gender;
 
-    @Enumerated(EnumType.STRING)
-    private RegionMajor regionMajor;
-
-    @ElementCollection
-    @CollectionTable(name = "subscriber_region_minors")
-    private List<String> regionMinors;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "subscriber_id")
+    private List<RegionGroupEntity> regionGroups;
 
     @ElementCollection
     @CollectionTable(name = "subscriber_departments")
