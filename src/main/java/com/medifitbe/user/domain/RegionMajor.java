@@ -1,5 +1,7 @@
 package com.medifitbe.user.domain;
 
+import com.fasterxml.jackson.databind.KeyDeserializer.None;
+
 public enum RegionMajor {
     서울,
     경기,
@@ -17,5 +19,6 @@ public enum RegionMajor {
     울산,
     경남,
     강원,
-    제주
+    제주,
+    NONE
 }

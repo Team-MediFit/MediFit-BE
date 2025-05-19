@@ -60,8 +60,6 @@ public class SubscriberEntity extends TimeBaseEntity {
 
     private Integer salaryMin;
 
-    private Integer salaryMax;
-
     @Enumerated(EnumType.STRING)
     private CareerType careerType;
 

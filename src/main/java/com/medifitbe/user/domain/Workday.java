@@ -7,5 +7,6 @@ public enum Workday {
     목,
     금,
     토,
-    일
+    일,
+    NONE
 }

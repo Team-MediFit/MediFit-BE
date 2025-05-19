@@ -9,7 +9,8 @@ public enum WorkType {
     PART_TIME_MORNING("파트타임 오전 (9-13시)"),
     PART_TIME_AFTERNOON("파트타임 오후 (14-18시)"),
     PART_TIME_EVENING("파트타임 저녁 (18시 이후)"),
-    ANYTIME("상관없음");
+    ANYTIME("상관없음"),
+    NONE("NONE");
 
     private final String label;
 
