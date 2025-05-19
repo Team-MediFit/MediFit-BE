@@ -58,4 +58,26 @@ public class SubscriberMapper {
                 .experienceMonths(request.experienceMonths())
                 .build();
     }
+    public Subscriber toDomain(SubscriberEntity entity) {
+        List<RegionGroup> regionGroups = entity.getRegionGroups().stream()
+                .map(groupEntity -> new RegionGroup(groupEntity.getMajor(), groupEntity.getMinors()))
+                .collect(Collectors.toList());
+
+        return Subscriber.builder()
+                .id(entity.getId())
+                .email(entity.getEmail())
+                .gender(entity.getGender())
+                .regionGroups(regionGroups)
+                .departments(entity.getDepartments())
+                .workTypes(entity.getWorkTypes())
+                .workdays(entity.getWorkdays())
+                .weekendWork(entity.getWeekendWork())
+                .welfarePreferences(entity.getWelfarePreferences())
+                .wageUnit(entity.getWageUnit())
+                .salaryMin(entity.getSalaryMin())
+                .salaryMax(entity.getSalaryMax())
+                .careerType(entity.getCareerType())
+                .experienceMonths(entity.getExperienceMonths())
+                .build();
+    }
 }
