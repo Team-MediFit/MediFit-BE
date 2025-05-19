@@ -40,5 +40,6 @@ public enum Department {
     인공신장실,
     주사실,
     중환자실,
-    혈관조영실
+    혈관조영실,
+    NONE
 }
