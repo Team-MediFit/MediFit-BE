@@ -11,6 +11,7 @@ import com.medifitbe.jobdata.adapter.out.persistence.repository.JobRecommendatio
 import com.medifitbe.jobdata.adapter.out.persistence.entity.JobRecommendationHistoryEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +27,7 @@ public class JobRecommendationService {
     private final SubscriberMapper subscriberMapper;
     private final JobRecommendationHistoryRepository historyRepository;
 
+    @Transactional
     public Map<String, List<JobRecommendation>> recommendForAllUsers() {
         List<JobDataEntity> allJobs = jobDataRepository.findAll();
         List<Subscriber> allSubscribers = subscriberRepository.findAll()

@@ -5,6 +5,7 @@ import com.medifitbe.jobdata.domain.JobRecommendation;
 import com.medifitbe.user.adapter.out.persistence.entity.SubscriberEntity;
 import com.medifitbe.user.adapter.out.persistence.repository.SubscriberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +25,8 @@ public class EmailBroadcastService {
             mailService.sendTo(subscriber.getEmail(), subject, content);
         }
     }
+    //@Scheduled(cron = "0 0 */3 * * *")
+    @Scheduled(cron = "0 */10 * * * *")
     public void sendRecommendations() {
         Map<String, List<JobRecommendation>> recommendationsMap = jobRecommendationService.recommendForAllUsers();
 
