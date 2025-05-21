@@ -25,8 +25,8 @@ public class EmailBroadcastService {
             mailService.sendTo(subscriber.getEmail(), subject, content);
         }
     }
-    //@Scheduled(cron = "0 0 */3 * * *")
-    @Scheduled(cron = "0 */10 * * * *")
+    @Scheduled(cron = "0 0 */3 * * *")
+    //@Scheduled(cron = "0 */10 * * * *")
     public void sendRecommendations() {
         Map<String, List<JobRecommendation>> recommendationsMap = jobRecommendationService.recommendForAllUsers();
 
@@ -36,14 +36,7 @@ public class EmailBroadcastService {
 
             if (recs.isEmpty()) continue;
 
-            StringBuilder body = new StringBuilder("추천 채용 공고 목록입니다:\n\n");
-            for (JobRecommendation rec : recs) {
-                body.append("- ").append(rec.getJobTitle()).append(" (")
-                        .append(rec.getHospitalName()).append(")\n")
-                        .append("  링크: ").append(rec.getLink()).append("\n\n");
-            }
-
-            mailService.sendTo(email, "맞춤 채용 추천", body.toString());
+            mailService.sendRecommendationsWithHtml(email, recs);
         }
     }
 }

@@ -26,7 +26,11 @@ public class JobRecommendationEngine {
                         .jobTitle(job.getJobTitle())
                         .location(job.getLocation())
                         .responsibilities(job.getResponsibilities())
+                        .imageUrl(null)
+                        .career(job.getExperience())
                         .link(job.getLink())
+                        .salary(job.getSalary())
+                        .deadline(job.getDeadline())
                         .similarityScore(score)
                         .build());
             }
