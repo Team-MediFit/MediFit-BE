@@ -20,7 +20,6 @@ public class Subscriber {
     private final List<Welfare> welfarePreferences;
     private final WageUnit wageUnit;
     private final Integer salaryMin;
-    private final Integer salaryMax;
     private final CareerType careerType;
     private final Integer experienceMonths;
 
@@ -37,7 +36,6 @@ public class Subscriber {
             List<Welfare> welfarePreferences,
             WageUnit wageUnit,
             Integer salaryMin,
-            Integer salaryMax,
             CareerType careerType,
             Integer experienceMonths
     ) {
@@ -52,7 +50,6 @@ public class Subscriber {
         this.welfarePreferences = welfarePreferences;
         this.wageUnit = wageUnit;
         this.salaryMin = salaryMin;
-        this.salaryMax = salaryMax;
         this.careerType = careerType;
         this.experienceMonths = experienceMonths;
     }

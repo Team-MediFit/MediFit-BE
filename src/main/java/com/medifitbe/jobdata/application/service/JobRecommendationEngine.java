@@ -66,6 +66,7 @@ public class JobRecommendationEngine {
                 String numeric = job.getSalary().replaceAll("[^0-9]", "");
                 if (!numeric.isEmpty()) {
                     int parsedSalary = Integer.parseInt(numeric);
+                  
                     if (subscriber.getSalaryMin() <= parsedSalary) {
                         matched++;
                     }

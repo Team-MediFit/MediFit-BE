@@ -8,7 +8,8 @@ import java.util.Arrays;
 public enum WeekendWork {
     가능("가능"),
     가급적_쉬고_싶음("가급적 쉬고 싶음"),
-    불가능("불가능");
+    불가능("불가능"),
+    NONE("NONE");
 
     private final String label;
 

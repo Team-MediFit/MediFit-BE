@@ -10,7 +10,8 @@ public enum Welfare {
     BONUS("상여금"),
     PAID_LEAVE("연차보장"),
     LUNCH_BREAK("점심시간보장"),
-    ANY("상관없음");
+    ANY("상관없음"),
+    NONE("NONE");
 
     private final String label;
 
