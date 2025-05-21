@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Medifit 채용 소식</title>
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Pretendard', sans-serif;
+            color: #121212;
+            background-color: #FFFFFF;
+            max-width: 100%;
+            width: 100%;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .hero {
+            background: linear-gradient(90deg, #3D84E6 0%, #7ADAE1 100%);
+            border-radius: 12px;
+            padding: 40px 20px;
+            margin-bottom: 40px;
+            color: #FFFFFF;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 1.5;
+            max-width: 80%;
+            margin: 0 auto;
+        }
+
+        .date {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            font-size: 20px;
+            color: #555555;
+            margin-bottom: 20px;
+        }
+
+        .title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .title::before {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 2px;
+            background-color: #121212;
+            margin: 0 auto 20px;
+        }
+
+        .title h2 {
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .description {
+            text-align: center;
+            font-size: 20px;
+            line-height: 1.5;
+            margin-bottom: 40px;
+        }
+
+        .list-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+
+        .job-list {
+            display: block;
+            width: 100%;
+        }
+
+        .job-card {
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            background: #FFFFFF;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            margin-bottom: 24px;
+            padding: 16px;
+            gap: 20px;
+        }
+
+        .job-image {
+            width: 180px !important;
+            height: 180px !important;
+            min-width: 180px;
+            min-height: 180px;
+            max-width: 180px;
+            max-height: 180px;
+            background-color: #f0f0f0;
+            background-image: url('https://via.placeholder.com/180');
+            background-size: cover;
+            background-position: center;
+            border-radius: 8px;
+            flex-shrink: 0;
+            object-fit: cover;
+        }
+
+        .job-content {
+            padding: 20px 16px;
+        }
+
+        .hospital-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #555555;
+            margin-bottom: 10px;
+        }
+
+        .job-title {
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 1.4;
+            word-break: keep-all;
+            max-width: 100%;
+            margin-bottom: 12px;
+        }
+
+        .job-details {
+            font-size: 16px;
+            color: #555;
+            margin-top: 12px;
+            margin-bottom: 12px;
+        }
+
+        .divider {
+            display: none;
+        }
+
+        .job-button {
+            margin-left: auto;
+            background-color: #3D84E6;
+            color: #FFFFFF;
+            font-size: 16px;
+            padding: 10px 20px;
+            border-radius: 999px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .job-button:hover {
+            background-color: #2a6bc0;
+        }
+
+        .footer-message {
+            text-align: center;
+            font-size: 20px;
+            margin-bottom: 40px;
+        }
+
+        .footer-border {
+            border-top: 2px solid #2B2B2B;
+            margin-bottom: 30px;
+        }
+
+        .footer-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: row;
+            gap: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .footer-links a {
+            color: #555555;
+            text-decoration: underline;
+            font-size: 18px;
+        }
+
+        .footer-divider {
+            display: none;
+        }
+
+        .footer-email {
+            text-align: center;
+            color: #555555;
+            font-size: 18px;
+        }
+
+        /* 모바일 반응형 스타일 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+
+            .hero {
+                padding: 30px 16px;
+                margin-bottom: 30px;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+                margin-bottom: 16px;
+            }
+
+            .hero p {
+                font-size: 20px;
+                max-width: 100%;
+            }
+
+            .title h2 {
+                font-size: 28px;
+            }
+
+            .description {
+                font-size: 18px;
+                margin-bottom: 30px;
+            }
+
+            .list-title {
+                font-size: 24px;
+                margin-bottom: 24px;
+            }
+
+            .job-card {
+                width: 100%;
+            }
+
+            .job-image {
+                width: 180px !important;
+                height: 180px !important;
+                min-width: 180px;
+                min-height: 180px;
+                max-width: 180px;
+                max-height: 180px;
+            }
+
+            .job-content {
+                padding: 0 16px 20px;
+            }
+
+            .job-title {
+                font-size: 22px;
+                margin-bottom: 16px;
+            }
+
+            .job-details {
+                flex-wrap: wrap;
+                font-size: 14px;
+                color: #555;
+                margin-bottom: 16px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .job-details span {
+                background-color: #f0f0f0;
+                padding: 4px 10px;
+                border-radius: 100px;
+            }
+
+            .divider {
+                display: none;
+            }
+
+            .job-button {
+                width: 100%;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="hero">
+        <h1>Medifit</h1>
+        <p>나에게 딱 맞는 정보만 골라 받는 구직 서비스</p>
+    </div>
+
+    <div class="date">
+        <span th:text="${currentDate}">2025. 05. 21</span>
+        <span th:text="${currentDay}">수요일</span>
+    </div>
+
+    <div class="title">
+        <h2>따끈따끈한 채용 소식이에요!</h2>
+    </div>
+
+    <div class="description">
+        <p>회원님의 경력과 조건에 딱 맞는 채용 정보를 엄선했어요. 놓치지 마세요!</p>
+    </div>
+
+    <h3 class="list-title">Fit한 채용 정보</h3>
+
+    <div class="job-list">
+        <div class="job-card" th:each="job : ${jobList}">
+            <div class="job-image"
+                 th:style="'background-image: url(' + (job.imageUrl != null ? job.imageUrl : 'https://via.placeholder.com/180') + ')'"></div>
+            <div class="job-content">
+                <div class="hospital-name" th:text="${job.hospitalName}">병원이름</div>
+                <div class="job-title" th:text="${job.jobTitle}">공고제목</div>
+                <div class="job-details">
+                    <span th:text="${job.deadline}">마감일</span>
+                </div>
+                <a class="job-button" th:href="${job.link}">
+                    지원하러 가기
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-message">
+        <p>다음에도 딱 알맞은 채용 공고가 올라오면, Medifit이 바로 보내드릴게요!</p>
+    </div>
+
+    <div class="footer-border"></div>
+
+    <div class="footer-wrapper">
+        <div class="footer-links">
+            <a href="#">구독 정보 수정</a>
+            <div class="footer-divider"></div>
+            <a href="#">구독 취소</a>
+            <span>😢</span>
+        </div>
+        <div class="footer-email">
+            christinejang06@gmail.com
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface SubscriberRepository extends JpaRepository<SubscriberEntity, Long> {
     List<SubscriberEntity> findAll();
+
 }

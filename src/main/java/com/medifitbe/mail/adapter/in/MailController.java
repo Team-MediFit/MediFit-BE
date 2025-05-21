@@ -21,4 +21,10 @@ public class MailController {
     public void sendBroadcast(@RequestBody BroadcastMailRequest request) {
         emailBroadcastService.sendToAll(request.getSubject(), request.getContent());
     }
+
+    @PostMapping("/recommendations/send-mail")
+    @Operation(summary = "추천 채용 메일 발송", description = "추천 채용 공고를 사용자별로 이메일로 발송합니다.")
+    public void sendRecommendationMails() {
+        emailBroadcastService.sendRecommendations();
+    }
 }

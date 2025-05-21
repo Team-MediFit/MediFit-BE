@@ -53,4 +53,10 @@ public class Subscriber {
         this.careerType = careerType;
         this.experienceMonths = experienceMonths;
     }
+
+    public List<String> getRegionMinors() {
+        return regionGroups.stream()
+                .flatMap(group -> group.getMinors().stream())
+                .toList();
+    }
 }
