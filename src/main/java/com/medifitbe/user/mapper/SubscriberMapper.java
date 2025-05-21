@@ -73,7 +73,6 @@ public class SubscriberMapper {
                 .welfarePreferences(entity.getWelfarePreferences())
                 .wageUnit(entity.getWageUnit())
                 .salaryMin(entity.getSalaryMin())
-                .salaryMax(entity.getSalaryMax())
                 .careerType(entity.getCareerType())
                 .experienceMonths(entity.getExperienceMonths())
                 .build();
