@@ -33,7 +33,6 @@ public class SubscriberMapper {
                 .welfarePreferences(subscriber.getWelfarePreferences())
                 .wageUnit(subscriber.getWageUnit())
                 .salaryMin(subscriber.getSalaryMin())
-                .salaryMax(subscriber.getSalaryMax())
                 .careerType(subscriber.getCareerType())
                 .experienceMonths(subscriber.getExperienceMonths())
                 .build();
@@ -53,7 +52,6 @@ public class SubscriberMapper {
                 .welfarePreferences(request.welfarePreferences())
                 .wageUnit(request.wageUnit())
                 .salaryMin(request.salaryMin())
-                .salaryMax(request.salaryMax())
                 .careerType(request.careerType())
                 .experienceMonths(request.experienceMonths())
                 .build();
@@ -75,7 +73,6 @@ public class SubscriberMapper {
                 .welfarePreferences(entity.getWelfarePreferences())
                 .wageUnit(entity.getWageUnit())
                 .salaryMin(entity.getSalaryMin())
-                .salaryMax(entity.getSalaryMax())
                 .careerType(entity.getCareerType())
                 .experienceMonths(entity.getExperienceMonths())
                 .build();
