@@ -3,21 +3,44 @@ package com.medifitbe.jobdata.application.service;
 import com.medifitbe.jobdata.adapter.out.persistence.entity.JobDataEntity;
 import com.medifitbe.jobdata.domain.JobRecommendation;
 import com.medifitbe.user.domain.Subscriber;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.medifitbe.jobdata.adapter.out.persistence.repository.JobRecommendationHistoryRepository;
+
 @Service
 public class JobRecommendationEngine {
+
+    private final JobRecommendationHistoryRepository jobRecommendationHistoryRepository;
+
+    @Autowired
+    public JobRecommendationEngine(JobRecommendationHistoryRepository jobRecommendationHistoryRepository) {
+        this.jobRecommendationHistoryRepository = jobRecommendationHistoryRepository;
+    }
 
     public List<JobRecommendation> recommend(List<JobDataEntity> jobs, Subscriber subscriber) {
         List<JobRecommendation> results = new ArrayList<>();
 
-        for (JobDataEntity job : jobs) {
+        // Find the most recent recommendation time for the subscriber (as Instant)
+        Instant latestRecommendationTime = jobRecommendationHistoryRepository
+                .findTopBySubscriberIdOrderByCreatedAtDesc(subscriber.getId())
+                .map(rec -> rec.getCreatedAt().atZone(ZoneId.systemDefault()).toInstant())
+                .orElse(Instant.EPOCH); // fallback to a reasonable default
+
+        // Only include jobs created after the latest recommendation time
+        List<JobDataEntity> newJobs = jobs.stream()
+                .filter(job -> job.getCreatedAt() != null &&
+                        job.getCreatedAt().atZone(ZoneId.systemDefault()).toInstant().isAfter(latestRecommendationTime))
+                .toList();
+
+        for (JobDataEntity job : newJobs) {
             double score = computeSimilarity(subscriber, job);
             if (score >= 0.4) {
                 results.add(JobRecommendation.builder()
