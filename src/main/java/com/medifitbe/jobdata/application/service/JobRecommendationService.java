@@ -34,15 +34,23 @@ public class JobRecommendationService {
                 .stream()
                 .map(subscriberMapper::toDomain)
                 .toList();
+        // System.out.println("총 구독자 수: " + allSubscribers.size());
+        // System.out.println("총 채용 공고 수: " + allJobs.size());
 
         Map<String, List<JobRecommendation>> result = new HashMap<>();
         allSubscribers.forEach(subscriber -> {
             List<JobRecommendation> recommendations = recommendationEngine.recommend(allJobs, subscriber);
+            // System.out.println("[" + subscriber.getEmail() + "] 추천된 개수: " + recommendations.size());
 
             // 중복 제거
             List<JobRecommendation> filtered = recommendations.stream()
-                    .filter(rec -> !historyRepository.existsBySubscriberIdAndJobId(subscriber.getId(), rec.getJobId()))
+                    .filter(rec -> {
+                        boolean alreadyExists = historyRepository.existsBySubscriberIdAndJobId(subscriber.getId(), rec.getJobId());
+                        // if (alreadyExists) System.out.println("🚫 이미 추천된 jobId: " + rec.getJobId());
+                        return !alreadyExists;
+                    })
                     .toList();
+            // System.out.println("[" + subscriber.getEmail() + "] 신규 추천 개수: " + filtered.size());
 
             // 추천 이력 저장
             filtered.stream()
