@@ -25,9 +25,9 @@ public class EmailBroadcastService {
             mailService.sendTo(subscriber.getEmail(), subject, content);
         }
     }
-    @Scheduled(cron = "0 0 */3 * * *")
-    //@Scheduled(cron = "0 */10 * * * *")
+    @Scheduled(cron = "0 0 9,12,15,18,21 * * *")
     public void sendRecommendations() {
+        System.out.println("스케줄링 실행");
         Map<String, List<JobRecommendation>> recommendationsMap = jobRecommendationService.recommendForAllUsers();
 
         for (Map.Entry<String, List<JobRecommendation>> entry : recommendationsMap.entrySet()) {
