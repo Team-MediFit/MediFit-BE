@@ -325,8 +325,9 @@
 
     <div class="job-list">
         <div class="job-card" th:each="job : ${jobList}">
-            <div class="job-image"
-                 th:style="'background-image: url(' + (job.imageUrl != null ? job.imageUrl : 'https://via.placeholder.com/180') + ')'"></div>
+            <img class="job-image"
+                 th:src="${job.imageUrl != null ? job.imageUrl : 'https://meifit-bucket.s3.ap-northeast-2.amazonaws.com/hospital-default.png'}"
+                 alt="병원 이미지" />
             <div class="job-content">
                 <div class="hospital-name" th:text="${job.hospitalName}">병원이름</div>
                 <div class="job-title" th:text="${job.jobTitle}">공고제목</div>
