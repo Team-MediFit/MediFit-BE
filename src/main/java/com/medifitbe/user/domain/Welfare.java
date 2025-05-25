@@ -8,8 +8,8 @@ public enum Welfare {
     MEAL("식대"),
     TRANSPORT("교통비"),
     BONUS("상여금"),
-    PAID_LEAVE("연차보장"),
-    LUNCH_BREAK("점심시간보장"),
+    PAID_LEAVE("연차 보장"),
+    LUNCH_BREAK("점심시간 보장"),
     ANY("상관없음"),
     NONE("NONE");
 
