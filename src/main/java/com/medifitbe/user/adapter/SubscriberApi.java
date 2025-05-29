@@ -1,6 +1,7 @@
 package com.medifitbe.user.adapter;
 
 import com.medifitbe.user.adapter.in.request.CreateSubscriberRequest;
+import com.medifitbe.user.adapter.in.request.DeleteSubscriberRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -12,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface SubscriberApi {
 
     @Operation(summary = "구독자 등록")
-    @PostMapping("/api/v1/subscribers")
     ResponseEntity<Void> createSubscriber(@RequestBody @Valid CreateSubscriberRequest request);
+
+    @Operation(summary = "이메일로 구독자 삭제")
+    ResponseEntity<Void> deleteByEmail(@RequestBody @Valid DeleteSubscriberRequest email);
 }
+
