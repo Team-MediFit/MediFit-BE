@@ -2,7 +2,6 @@ package com.medifitbe.user.adapter.out.persistence;
 
 import com.medifitbe.user.adapter.out.persistence.entity.SubscriberEntity;
 import com.medifitbe.user.adapter.out.persistence.repository.SubscriberRepository;
-import com.medifitbe.user.application.port.in.DeleteSubscriberUseCase;
 import com.medifitbe.user.application.port.out.CreateSubscriberPort;
 import com.medifitbe.user.application.port.out.DeleteSubscriberPort;
 import com.medifitbe.user.domain.Subscriber;
