@@ -24,7 +24,7 @@ public record CreateSubscriberRequest(
         @Schema(description = "희망 진료과", example = "[\"내과\", \"정신건강의학과\"]")
         List<Department> departments,
 
-        @Schema(description = "희망 근무 형태", example = "[\"풀타임\", \"상관없음\"]")
+        @Schema(description = "희망 근무 형태", example = "[\"풀타임\"]")
         List<WorkType> workTypes,
 
         @Schema(description = "근무 가능 요일", example = "[\"월\", \"화\", \"수\"]")
@@ -33,7 +33,7 @@ public record CreateSubscriberRequest(
         @Schema(description = "주말 근무 가능 여부", example = "가급적 쉬고 싶음")
         WeekendWork weekendWork,
 
-        @Schema(description = "복지 선호", example = "[\"식대\", \"연차보장\"]")
+        @Schema(description = "복지 선호", example = "[\"식대\", \"연차 보장\"]")
         List<Welfare> welfarePreferences,
 
         @Schema(description = "급여 단위", example = "월급")
