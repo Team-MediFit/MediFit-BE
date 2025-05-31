@@ -1,4 +1,6 @@
 package com.medifitbe.jobdata.application.service;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.medifitbe.jobdata.adapter.out.persistence.entity.JobDataEntity;
 import com.medifitbe.jobdata.domain.JobRecommendation;
@@ -72,13 +74,39 @@ public class JobRecommendationEngine {
         int matched = 0;
         int total = 5;
 
-        // 지역
-        if (subscriber.getRegionGroups().stream().anyMatch(g ->
-                job.getLocation() != null &&
-                        (job.getLocation().contains(g.getMajor().name()) ||
-                                g.getMinors().stream().anyMatch(job.getLocation()::contains)))) {
-            matched++;
+        // 지역 (Region) Jaccard similarity - 필수 조건 + 마이너 포함 필수
+        boolean regionMatched = false;
+
+        if (job.getLocation() != null) {
+            String[] locationTokens = job.getLocation().split(" ");
+            Set<String> jobLocationSet = new HashSet<>(List.of(locationTokens));
+
+            for (var g : subscriber.getRegionGroups()) {
+                // 마이너 지역 필수 포함
+                boolean minorMatched = g.getMinors().stream().anyMatch(jobLocationSet::contains);
+                if (!minorMatched) continue;
+
+                // 메이저 + 마이너 기준으로 유사도 검사
+                Set<String> subscriberRegionSet = new HashSet<>();
+                subscriberRegionSet.add(g.getMajor().name());
+                subscriberRegionSet.addAll(g.getMinors());
+
+                Set<String> intersection = new HashSet<>(jobLocationSet);
+                intersection.retainAll(subscriberRegionSet);
+
+                Set<String> union = new HashSet<>(jobLocationSet);
+                union.addAll(subscriberRegionSet);
+
+                double jaccard = (double) intersection.size() / union.size();
+                if (jaccard >= 0.3) {
+                    regionMatched = true;
+                    break;
+                }
+            }
         }
+
+        if (!regionMatched) return 0.0;
+        matched++;
 
         // 진료과
         if (subscriber.getDepartments().stream()
