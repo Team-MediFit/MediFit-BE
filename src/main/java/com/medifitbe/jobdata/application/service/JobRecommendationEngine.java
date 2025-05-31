@@ -46,6 +46,13 @@ public class JobRecommendationEngine {
                 .toList();
 
         for (JobDataEntity job : newJobs) {
+            // Experience filtering
+            int userExpMonths = subscriber.getExperienceMonths(); // assumes getter exists
+            int requiredExpMonths = extractRequiredExperienceMonths(job.getExperience());
+            if (userExpMonths > 0 && requiredExpMonths > userExpMonths) {
+                continue; // skip if user's experience is less than required
+            }
+
             double score = computeSimilarity(subscriber, job);
             if (score >= 0.4) {
                 results.add(JobRecommendation.builder()
@@ -72,7 +79,7 @@ public class JobRecommendationEngine {
 
     private double computeSimilarity(Subscriber subscriber, JobDataEntity job) {
         int matched = 0;
-        int total = 5;
+        int total = 6;
 
         // 지역 (Region) Jaccard similarity - 필수 조건 + 마이너 포함 필수
         boolean regionMatched = false;
@@ -165,6 +172,61 @@ public class JobRecommendationEngine {
             matched++;
         }
 
+        // 경력
+        if (job.getExperience() != null) {
+            String jobExp = job.getExperience().toLowerCase();
+            int subscriberMonths = subscriber.getExperienceMonths();
+            boolean matchedExp = false;
+
+            try {
+                Matcher mMonth = Pattern.compile("(\\d{1,3})\\s*개월").matcher(jobExp);
+                Matcher mYear = Pattern.compile("(\\d{1,2})\\s*년").matcher(jobExp);
+
+                if (mMonth.find()) {
+                    int requiredMonths = Integer.parseInt(mMonth.group(1));
+                    if (subscriberMonths >= requiredMonths) {
+                        matchedExp = true;
+                    }
+                } else if (mYear.find()) {
+                    int requiredYears = Integer.parseInt(mYear.group(1));
+                    if (subscriberMonths >= requiredYears * 12) {
+                        matchedExp = true;
+                    }
+                } else if (jobExp.contains("무관") || jobExp.contains("관계없음")) {
+                    matchedExp = true;
+                }
+            } catch (Exception ignored) {}
+
+            if (matchedExp) {
+                matched++;
+            }
+        } else {
+            // 경력 정보 없음 → 기본적으로 통과
+            matched++;
+        }
+
         return (double) matched / total;
+    }
+    /**
+     * Extracts the required experience in months from a job experience string.
+     * If no valid requirement is found, returns 0.
+     * Handles cases such as "간호조무사 1년", "2년", "6개월", etc.
+     */
+    private int extractRequiredExperienceMonths(String experienceText) {
+        if (experienceText == null) return 0;
+
+        String textToSearch = experienceText;
+        if (experienceText.contains("간호조무사")) {
+            textToSearch = experienceText.substring(experienceText.indexOf("간호조무사") + "간호조무사".length());
+        }
+
+        java.util.regex.Matcher matcher = java.util.regex.Pattern.compile("(\\d+)(년|개월)").matcher(textToSearch);
+        if (matcher.find()) {
+            int number = Integer.parseInt(matcher.group(1));
+            String unit = matcher.group(2);
+            return unit.equals("년") ? number * 12 : number;
+        }
+
+        return 0;
     }
 }
