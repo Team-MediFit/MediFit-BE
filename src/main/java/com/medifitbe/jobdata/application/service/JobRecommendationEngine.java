@@ -15,6 +15,9 @@ import java.util.stream.Collectors;
 
 import com.medifitbe.jobdata.adapter.out.persistence.repository.JobRecommendationHistoryRepository;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 @Service
 public class JobRecommendationEngine {
 
@@ -86,11 +89,36 @@ public class JobRecommendationEngine {
         // 급여
         if (job.getSalary() != null) {
             try {
-                String numeric = job.getSalary().replaceAll("[^0-9]", "");
-                if (!numeric.isEmpty()) {
-                    int parsedSalary = Integer.parseInt(numeric);
-                  
-                    if (subscriber.getSalaryMin() <= parsedSalary) {
+                String salaryStr = job.getSalary();
+                Pattern pattern = Pattern.compile("(\\d+[,.]?\\d*)");
+                Matcher matcher = pattern.matcher(salaryStr.replace(",", ""));
+
+                if (matcher.find()) {
+                    String firstNumericStr = matcher.group(1);
+                    int parsedSalary = (int)(Double.parseDouble(firstNumericStr) * 10000); // 만 단위 기준 환산
+
+                    // 공고 급여 단위 추정
+                    boolean isJobHourly = salaryStr.contains("시") || salaryStr.contains("시급");
+                    boolean isJobMonthly = salaryStr.contains("월") || salaryStr.contains("월급");
+                    boolean isJobYearly = salaryStr.contains("연") || salaryStr.contains("연봉");
+
+                    // 구독자 희망 급여 단위
+                    String subscriberUnit = String.valueOf(subscriber.getWageUnit()); // "월급", "연봉", or "시급"
+                    int subscriberMin = subscriber.getSalaryMin();
+
+                    // 단위 환산: 모두 subscriber 단위로 맞추기
+                    if ("월급".equals(subscriberUnit)) {
+                        if (isJobYearly) parsedSalary = parsedSalary / 12;
+                        else if (isJobHourly) parsedSalary = parsedSalary * 209; // 시급 → 월급 (기준 근무시간 209h)
+                    } else if ("연봉".equals(subscriberUnit)) {
+                        if (isJobMonthly) parsedSalary = parsedSalary * 12;
+                        else if (isJobHourly) parsedSalary = parsedSalary * 209 * 12;
+                    } else if ("시급".equals(subscriberUnit)) {
+                        if (isJobMonthly) parsedSalary = parsedSalary / 209;
+                        else if (isJobYearly) parsedSalary = parsedSalary / (209 * 12);
+                    }
+
+                    if (subscriberMin <= parsedSalary) {
                         matched++;
                     }
                 }
