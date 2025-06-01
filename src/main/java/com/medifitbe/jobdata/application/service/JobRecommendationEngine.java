@@ -1,4 +1,6 @@
 package com.medifitbe.jobdata.application.service;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.medifitbe.jobdata.adapter.out.persistence.entity.JobDataEntity;
 import com.medifitbe.jobdata.domain.JobRecommendation;
@@ -14,6 +16,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.medifitbe.jobdata.adapter.out.persistence.repository.JobRecommendationHistoryRepository;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class JobRecommendationEngine {
@@ -41,6 +46,13 @@ public class JobRecommendationEngine {
                 .toList();
 
         for (JobDataEntity job : newJobs) {
+            // Experience filtering
+            int userExpMonths = subscriber.getExperienceMonths(); // assumes getter exists
+            int requiredExpMonths = extractRequiredExperienceMonths(job.getExperience());
+            if (userExpMonths > 0 && requiredExpMonths > userExpMonths) {
+                continue; // skip if user's experience is less than required
+            }
+
             double score = computeSimilarity(subscriber, job);
             if (score >= 0.4) {
                 results.add(JobRecommendation.builder()
@@ -67,15 +79,41 @@ public class JobRecommendationEngine {
 
     private double computeSimilarity(Subscriber subscriber, JobDataEntity job) {
         int matched = 0;
-        int total = 5;
+        int total = 6;
 
-        // 지역
-        if (subscriber.getRegionGroups().stream().anyMatch(g ->
-                job.getLocation() != null &&
-                        (job.getLocation().contains(g.getMajor().name()) ||
-                                g.getMinors().stream().anyMatch(job.getLocation()::contains)))) {
-            matched++;
+        // 지역 (Region) Jaccard similarity - 필수 조건 + 마이너 포함 필수
+        boolean regionMatched = false;
+
+        if (job.getLocation() != null) {
+            String[] locationTokens = job.getLocation().split(" ");
+            Set<String> jobLocationSet = new HashSet<>(List.of(locationTokens));
+
+            for (var g : subscriber.getRegionGroups()) {
+                // 마이너 지역 필수 포함
+                boolean minorMatched = g.getMinors().stream().anyMatch(jobLocationSet::contains);
+                if (!minorMatched) continue;
+
+                // 메이저 + 마이너 기준으로 유사도 검사
+                Set<String> subscriberRegionSet = new HashSet<>();
+                subscriberRegionSet.add(g.getMajor().name());
+                subscriberRegionSet.addAll(g.getMinors());
+
+                Set<String> intersection = new HashSet<>(jobLocationSet);
+                intersection.retainAll(subscriberRegionSet);
+
+                Set<String> union = new HashSet<>(jobLocationSet);
+                union.addAll(subscriberRegionSet);
+
+                double jaccard = (double) intersection.size() / union.size();
+                if (jaccard >= 0.3) {
+                    regionMatched = true;
+                    break;
+                }
+            }
         }
+
+        if (!regionMatched) return 0.0;
+        matched++;
 
         // 진료과
         if (subscriber.getDepartments().stream()
@@ -86,11 +124,36 @@ public class JobRecommendationEngine {
         // 급여
         if (job.getSalary() != null) {
             try {
-                String numeric = job.getSalary().replaceAll("[^0-9]", "");
-                if (!numeric.isEmpty()) {
-                    int parsedSalary = Integer.parseInt(numeric);
-                  
-                    if (subscriber.getSalaryMin() <= parsedSalary) {
+                String salaryStr = job.getSalary();
+                Pattern pattern = Pattern.compile("(\\d+[,.]?\\d*)");
+                Matcher matcher = pattern.matcher(salaryStr.replace(",", ""));
+
+                if (matcher.find()) {
+                    String firstNumericStr = matcher.group(1);
+                    int parsedSalary = (int)(Double.parseDouble(firstNumericStr) * 10000); // 만 단위 기준 환산
+
+                    // 공고 급여 단위 추정
+                    boolean isJobHourly = salaryStr.contains("시") || salaryStr.contains("시급");
+                    boolean isJobMonthly = salaryStr.contains("월") || salaryStr.contains("월급");
+                    boolean isJobYearly = salaryStr.contains("연") || salaryStr.contains("연봉");
+
+                    // 구독자 희망 급여 단위
+                    String subscriberUnit = String.valueOf(subscriber.getWageUnit()); // "월급", "연봉", or "시급"
+                    int subscriberMin = subscriber.getSalaryMin();
+
+                    // 단위 환산: 모두 subscriber 단위로 맞추기
+                    if ("월급".equals(subscriberUnit)) {
+                        if (isJobYearly) parsedSalary = parsedSalary / 12;
+                        else if (isJobHourly) parsedSalary = parsedSalary * 209; // 시급 → 월급 (기준 근무시간 209h)
+                    } else if ("연봉".equals(subscriberUnit)) {
+                        if (isJobMonthly) parsedSalary = parsedSalary * 12;
+                        else if (isJobHourly) parsedSalary = parsedSalary * 209 * 12;
+                    } else if ("시급".equals(subscriberUnit)) {
+                        if (isJobMonthly) parsedSalary = parsedSalary / 209;
+                        else if (isJobYearly) parsedSalary = parsedSalary / (209 * 12);
+                    }
+
+                    if (subscriberMin <= parsedSalary) {
                         matched++;
                     }
                 }
@@ -109,6 +172,61 @@ public class JobRecommendationEngine {
             matched++;
         }
 
+        // 경력
+        if (job.getExperience() != null) {
+            String jobExp = job.getExperience().toLowerCase();
+            int subscriberMonths = subscriber.getExperienceMonths();
+            boolean matchedExp = false;
+
+            try {
+                Matcher mMonth = Pattern.compile("(\\d{1,3})\\s*개월").matcher(jobExp);
+                Matcher mYear = Pattern.compile("(\\d{1,2})\\s*년").matcher(jobExp);
+
+                if (mMonth.find()) {
+                    int requiredMonths = Integer.parseInt(mMonth.group(1));
+                    if (subscriberMonths >= requiredMonths) {
+                        matchedExp = true;
+                    }
+                } else if (mYear.find()) {
+                    int requiredYears = Integer.parseInt(mYear.group(1));
+                    if (subscriberMonths >= requiredYears * 12) {
+                        matchedExp = true;
+                    }
+                } else if (jobExp.contains("무관") || jobExp.contains("관계없음")) {
+                    matchedExp = true;
+                }
+            } catch (Exception ignored) {}
+
+            if (matchedExp) {
+                matched++;
+            }
+        } else {
+            // 경력 정보 없음 → 기본적으로 통과
+            matched++;
+        }
+
         return (double) matched / total;
+    }
+    /**
+     * Extracts the required experience in months from a job experience string.
+     * If no valid requirement is found, returns 0.
+     * Handles cases such as "간호조무사 1년", "2년", "6개월", etc.
+     */
+    private int extractRequiredExperienceMonths(String experienceText) {
+        if (experienceText == null) return 0;
+
+        String textToSearch = experienceText;
+        if (experienceText.contains("간호조무사")) {
+            textToSearch = experienceText.substring(experienceText.indexOf("간호조무사") + "간호조무사".length());
+        }
+
+        java.util.regex.Matcher matcher = java.util.regex.Pattern.compile("(\\d+)(년|개월)").matcher(textToSearch);
+        if (matcher.find()) {
+            int number = Integer.parseInt(matcher.group(1));
+            String unit = matcher.group(2);
+            return unit.equals("년") ? number * 12 : number;
+        }
+
+        return 0;
     }
 }
