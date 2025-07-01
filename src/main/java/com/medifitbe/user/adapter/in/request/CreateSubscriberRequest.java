@@ -1,6 +1,7 @@
 package com.medifitbe.user.adapter.in.request;
 
 import com.medifitbe.user.domain.*;
+import com.medifitbe.user.domain.JobType;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -20,6 +21,10 @@ public record CreateSubscriberRequest(
 
         @Schema(description = "주요 지역 그룹", example = "[{\"major\": \"서울\", \"minors\": [\"강남구\", \"서초구\"]}, {\"major\": \"경기\", \"minors\": [\"수원시\", \"성남시\"]}]")
         List<RegionGroup> regionGroups,
+
+        @Schema(description = "직종", example = "간호사")
+        @NotNull
+        JobType jobType,
 
         @Schema(description = "희망 진료과", example = "[\"내과\", \"정신건강의학과\"]")
         List<Department> departments,
