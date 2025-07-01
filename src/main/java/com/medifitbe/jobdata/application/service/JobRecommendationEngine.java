@@ -4,6 +4,7 @@ import java.util.Set;
 
 import com.medifitbe.jobdata.adapter.out.persistence.entity.JobDataEntity;
 import com.medifitbe.jobdata.domain.JobRecommendation;
+import com.medifitbe.user.domain.JobType;
 import com.medifitbe.user.domain.Subscriber;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,9 +47,13 @@ public class JobRecommendationEngine {
                 .toList();
 
         for (JobDataEntity job : newJobs) {
+
+            if (job.getJobType() != null &&!job.getJobType().equals(subscriber.getJobType().name())) {
+                continue;
+            }
             // Experience filtering
             int userExpMonths = subscriber.getExperienceMonths(); // assumes getter exists
-            int requiredExpMonths = extractRequiredExperienceMonths(job.getExperience());
+            int requiredExpMonths = extractRequiredExperienceMonths(job.getExperience(), subscriber.getJobType());
             if (userExpMonths > 0 && requiredExpMonths > userExpMonths) {
                 continue; // skip if user's experience is less than required
             }
@@ -59,6 +64,7 @@ public class JobRecommendationEngine {
                         .jobId(job.getId())
                         .hospitalName(job.getHospitalName())
                         .jobTitle(job.getJobTitle())
+                        .jobType(job.getJobType())
                         .location(job.getLocation())
                         .responsibilities(job.getResponsibilities())
                         .imageUrl(null)
@@ -212,12 +218,18 @@ public class JobRecommendationEngine {
      * If no valid requirement is found, returns 0.
      * Handles cases such as "간호조무사 1년", "2년", "6개월", etc.
      */
-    private int extractRequiredExperienceMonths(String experienceText) {
+    private int extractRequiredExperienceMonths(String experienceText, JobType subscriberJobType) {
         if (experienceText == null) return 0;
 
         String textToSearch = experienceText;
-        if (experienceText.contains("간호조무사")) {
-            textToSearch = experienceText.substring(experienceText.indexOf("간호조무사") + "간호조무사".length());
+        if (subscriberJobType != null && subscriberJobType.name().equals("간호사")) {
+            if (experienceText.contains("간호사")) {
+                textToSearch = experienceText.substring(experienceText.indexOf("간호사") + "간호사".length());
+            }
+        } else {
+            if (experienceText.contains("간호조무사")) {
+                textToSearch = experienceText.substring(experienceText.indexOf("간호조무사") + "간호조무사".length());
+            }
         }
 
         java.util.regex.Matcher matcher = java.util.regex.Pattern.compile("(\\d+)(년|개월)").matcher(textToSearch);
