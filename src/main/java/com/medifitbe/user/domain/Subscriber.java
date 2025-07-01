@@ -12,6 +12,7 @@ public class Subscriber {
     private final Long id;
     private final String email;
     private final Boolean gender;
+    private final JobType jobType;
     private final List<RegionGroup> regionGroups;
     private final List<Department> departments;
     private final List<WorkType> workTypes;
@@ -28,6 +29,7 @@ public class Subscriber {
             Long id,
             String email,
             Boolean gender,
+            JobType jobType,
             List<RegionGroup> regionGroups,
             List<Department> departments,
             List<WorkType> workTypes,
@@ -42,6 +44,7 @@ public class Subscriber {
         this.id = id;
         this.email = email;
         this.gender = gender;
+        this.jobType = jobType;
         this.regionGroups = regionGroups;
         this.departments = departments;
         this.workTypes = workTypes;

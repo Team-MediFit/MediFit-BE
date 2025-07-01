@@ -35,6 +35,7 @@ public class SubscriberMapper {
                 .salaryMin(subscriber.getSalaryMin())
                 .careerType(subscriber.getCareerType())
                 .experienceMonths(subscriber.getExperienceMonths())
+                .jobType(subscriber.getJobType())
                 .build();
     }
 
@@ -54,6 +55,7 @@ public class SubscriberMapper {
                 .salaryMin(request.salaryMin())
                 .careerType(request.careerType())
                 .experienceMonths(request.experienceMonths())
+                .jobType(request.jobType())
                 .build();
     }
     public Subscriber toDomain(SubscriberEntity entity) {
@@ -75,6 +77,7 @@ public class SubscriberMapper {
                 .salaryMin(entity.getSalaryMin())
                 .careerType(entity.getCareerType())
                 .experienceMonths(entity.getExperienceMonths())
+                .jobType(entity.getJobType())
                 .build();
     }
 }

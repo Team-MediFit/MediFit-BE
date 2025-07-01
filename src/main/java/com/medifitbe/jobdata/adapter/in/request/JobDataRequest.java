@@ -10,6 +10,7 @@ public record JobDataRequest(
     @Schema(description = "사이트 이름", example = "인크루트") @NotBlank String siteName,
     @Schema(description = "병원 이름", example = "서울삼성안과의원") @NotBlank String hospitalName,
     @Schema(description = "공고 제목", example = "정규직 간호조무사 모집") @NotBlank String jobTitle,
+    @Schema(description = "직종", example ="간호사") String jobType,
     @Schema(description = "지역", example = "서울특별시 강남구") String location,
     @Schema(description = "급여", example = "월급 220만원") String salary,
     @Schema(description = "경력", example = "신입") String experience,

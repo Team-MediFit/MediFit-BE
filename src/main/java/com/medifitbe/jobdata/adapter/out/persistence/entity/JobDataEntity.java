@@ -23,6 +23,7 @@ public class JobDataEntity extends TimeBaseEntity {
     private String siteName;         // 사이트 이름
     private String hospitalName;     // 병원명
     private String jobTitle;         // 공고 제목
+    private String jobType;          // 직종
     private String location;         // 지역
     private String salary;           // 급여
     private String experience;       // 경력

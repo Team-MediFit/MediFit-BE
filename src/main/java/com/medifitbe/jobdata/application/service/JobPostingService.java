@@ -22,6 +22,7 @@ public class JobPostingService {
                 .siteName(request.siteName())
                 .hospitalName(request.hospitalName())
                 .jobTitle(request.jobTitle())
+                .jobType(request.jobType())
                 .location(request.location())
                 .salary(request.salary())
                 .experience(request.experience())

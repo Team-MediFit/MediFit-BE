@@ -28,6 +28,10 @@ public class SubscriberEntity extends TimeBaseEntity {
 
     private Boolean gender;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private JobType jobType;
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "subscriber_id")
     private List<RegionGroupEntity> regionGroups;

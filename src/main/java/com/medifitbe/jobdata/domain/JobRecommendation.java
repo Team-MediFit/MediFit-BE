@@ -9,6 +9,7 @@ public class JobRecommendation {
     private Long jobId;
     private String hospitalName;
     private String jobTitle;
+    private String jobType;
     private String location;
     private String responsibilities;
     private String link;
@@ -19,12 +20,13 @@ public class JobRecommendation {
     private String deadline;
 
     @Builder
-    public JobRecommendation(Long jobId, String hospitalName, String jobTitle, String location,
+    public JobRecommendation(Long jobId, String hospitalName, String jobTitle, String jobType, String location,
                              String responsibilities, String link, double similarityScore,
-                             String imageUrl, String career, String salary, String deadline) { // ✅ 추가
+                             String imageUrl, String career, String salary, String deadline) {
         this.jobId = jobId;
         this.hospitalName = hospitalName;
         this.jobTitle = jobTitle;
+        this.jobType = jobType;
         this.location = location;
         this.responsibilities = responsibilities;
         this.link = link;
