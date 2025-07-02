@@ -50,10 +50,11 @@ public class JobDataService {
     }
 
     public JobDataResponse update(Long id, JobDataRequest request) {
-        JobDataEntity entity = jobDataRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("해당 ID의 채용 정보를 찾을 수 없습니다: " + id));
+        if (!jobDataRepository.existsById(id)) {
+            throw new IllegalArgumentException("해당 ID의 채용 정보를 찾을 수 없습니다: " + id);
+        }
 
-        entity = JobDataEntity.builder()
+        JobDataEntity entity = JobDataEntity.builder()
                 .id(id)
                 .siteName(request.siteName())
                 .hospitalName(request.hospitalName())
