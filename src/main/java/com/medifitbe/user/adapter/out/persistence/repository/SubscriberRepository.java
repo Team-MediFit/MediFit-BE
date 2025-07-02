@@ -10,4 +10,5 @@ import java.util.List;
 public interface SubscriberRepository extends JpaRepository<SubscriberEntity, Long> {
     List<SubscriberEntity> findAll();
     void deleteByEmail(String email);
+    java.util.Optional<SubscriberEntity> findByEmail(String email);
 }
