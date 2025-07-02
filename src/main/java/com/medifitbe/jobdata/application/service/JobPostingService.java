@@ -5,8 +5,10 @@ import com.medifitbe.jobdata.adapter.out.persistence.entity.JobDataEntity;
 import com.medifitbe.jobdata.adapter.out.persistence.repository.JobDataRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class JobPostingService {
 

@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class JobRecommendationService {
 
@@ -27,7 +28,7 @@ public class JobRecommendationService {
     private final SubscriberMapper subscriberMapper;
     private final JobRecommendationHistoryRepository historyRepository;
 
-    @Transactional
+
     public Map<String, List<JobRecommendation>> recommendForAllUsers() {
         List<JobDataEntity> allJobs = jobDataRepository.findAll();
         List<Subscriber> allSubscribers = subscriberRepository.findAll()

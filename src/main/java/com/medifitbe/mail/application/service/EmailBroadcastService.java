@@ -7,11 +7,13 @@ import com.medifitbe.user.adapter.out.persistence.repository.SubscriberRepositor
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class EmailBroadcastService {
     private final SubscriberRepository subscriberRepository;

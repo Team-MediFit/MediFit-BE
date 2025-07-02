@@ -7,11 +7,13 @@ import com.medifitbe.user.adapter.out.persistence.entity.SubscriberEntity;
 import com.medifitbe.user.adapter.out.persistence.repository.SubscriberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
 
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 @Service
 public class JobRecommendationHistoryService {
 
