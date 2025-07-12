@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Objects;
 
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 @Service
 public class JobRecommendationHistoryService {
 

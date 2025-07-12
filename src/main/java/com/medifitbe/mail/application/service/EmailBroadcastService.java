@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 @RequiredArgsConstructor
 public class EmailBroadcastService {
     private final SubscriberRepository subscriberRepository;
